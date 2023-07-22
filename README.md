@@ -1,4 +1,5 @@
 ```
+$ cd envs
 $ terraform apply
 ```
 
