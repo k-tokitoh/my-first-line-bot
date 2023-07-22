@@ -1,0 +1,7 @@
+```
+$ terraform apply
+```
+
+```
+$ terraform destroy
+```
