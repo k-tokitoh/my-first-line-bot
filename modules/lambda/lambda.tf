@@ -6,6 +6,10 @@ variable "lambda_role-arn" {
   type = string
 }
 
+variable "api-execution-arn" {
+  type = string
+}
+
 data "archive_file" "main" {
   type        = "zip"
   source_dir  = "${path.module}/dst/unzipped"
@@ -20,6 +24,14 @@ resource "aws_lambda_function" "main" {
   source_code_hash = data.archive_file.main.output_base64sha256
   runtime          = "nodejs18.x"
   timeout          = 10
+}
+
+resource "aws_lambda_permission" "main" {
+  statement_id  = "AllowAPIGatewayGetTrApi"
+  action        = "lambda:InvokeFunction"
+  function_name = aws_lambda_function.main.arn
+  principal     = "apigateway.amazonaws.com"
+  source_arn    = "${var.api-execution-arn}/test/GET/"
 }
 
 output "lambda-invoke-arn" {
