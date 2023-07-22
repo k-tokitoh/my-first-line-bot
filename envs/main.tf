@@ -9,11 +9,14 @@ terraform {
   required_version = ">= 1.2.0"
 }
 
-resource "aws_instance" "app_server" {
-  ami           = "ami-053b0d53c279acc90"
-  instance_type = "t2.micro"
-
-  tags = {
-    Name = "ExampleAppServerInstance"
-  }
+module "iam" {
+  source = "../modules/iam"
+  prefix = "line_bot"
 }
+
+module "lambda" {
+  source          = "../modules/lambda"
+  prefix          = "line_bot"
+  lambda_role-arn = module.iam.lambda_role-arn
+}
+
