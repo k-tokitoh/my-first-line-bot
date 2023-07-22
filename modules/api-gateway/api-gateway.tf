@@ -10,15 +10,15 @@ resource "aws_api_gateway_rest_api" "main" {
   name = "${var.prefix}_api"
 }
 
-resource "aws_api_gateway_method" "get" {
+resource "aws_api_gateway_method" "post" {
   authorization = "NONE"
-  http_method   = "GET"
+  http_method   = "POST"
   resource_id   = aws_api_gateway_rest_api.main.root_resource_id
   rest_api_id   = aws_api_gateway_rest_api.main.id
 }
 
 resource "aws_api_gateway_integration" "main" {
-  http_method             = aws_api_gateway_method.get.http_method
+  http_method             = aws_api_gateway_method.post.http_method
   resource_id             = aws_api_gateway_rest_api.main.root_resource_id
   rest_api_id             = aws_api_gateway_rest_api.main.id
   integration_http_method = "POST"

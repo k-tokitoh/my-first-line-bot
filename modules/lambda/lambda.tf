@@ -10,6 +10,15 @@ variable "api-execution-arn" {
   type = string
 }
 
+variable "channel_access_token" {
+  type = string
+}
+
+variable "channel_secret" {
+  type = string
+}
+
+
 data "archive_file" "main" {
   type        = "zip"
   source_dir  = "${path.module}/dst/unzipped"
@@ -24,14 +33,20 @@ resource "aws_lambda_function" "main" {
   source_code_hash = data.archive_file.main.output_base64sha256
   runtime          = "nodejs18.x"
   timeout          = 10
+  environment {
+    variables = {
+      CHANNEL_ACCESS_TOKEN = "${var.channel_access_token}"
+      CHANNEL_SECRET       = "${var.channel_secret}"
+    }
+  }
 }
 
 resource "aws_lambda_permission" "main" {
-  statement_id  = "AllowAPIGatewayGetTrApi"
+  statement_id  = "AllowAPIGatewayPostApi"
   action        = "lambda:InvokeFunction"
   function_name = aws_lambda_function.main.arn
   principal     = "apigateway.amazonaws.com"
-  source_arn    = "${var.api-execution-arn}/test/GET/"
+  source_arn    = "${var.api-execution-arn}/test/POST/"
 }
 
 output "lambda-invoke-arn" {

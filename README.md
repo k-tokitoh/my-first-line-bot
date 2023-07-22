@@ -1,3 +1,7 @@
+# prerequisites
+
+create `envs/terraform.tfvars` based on `envs/terraform.tfvars.template`
+
 # development
 
 ```
